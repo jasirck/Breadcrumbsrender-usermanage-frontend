@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "../UserProfile/UserProfile";
+import ToDo from "../todo/ToDo";
+import { useSelector } from "react-redux";
 
 function Home() {
   const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
-
+  const { isAuthenticated } = useSelector((state) => state.usermanage);
+  const token = isAuthenticated;
   const toggleProfileModal = () => {
     setShowProfileModal(!showProfileModal);
   };
@@ -94,6 +97,7 @@ function Home() {
           </div>
         )}
       </div>
+      { token && <ToDo/>}
     </div>
   );
 }

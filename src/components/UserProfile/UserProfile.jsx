@@ -26,7 +26,6 @@ function UserProfile({ closeModal }) {
       navigate("/login");
       return;
     }
-    console.log(`${backendURL}${profileData.profile_image}`);
     const fetchProfileData = async () => {
       try {
         const data = await profileService.getProfile(token);
@@ -41,7 +40,7 @@ function UserProfile({ closeModal }) {
     if (token) {
       fetchProfileData();
     }
-  }, [token, navigate,profileData.profile_image]);
+  }, [token,profileData]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
