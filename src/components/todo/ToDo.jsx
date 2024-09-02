@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import axios from 'axios';
+import axios from '../../axios';
 import { FiEdit3 } from "react-icons/fi";
 import { MdOutlineSaveAs } from "react-icons/md";
 import { FaPlus, FaTimes } from "react-icons/fa";
@@ -11,16 +11,15 @@ function ToDo() {
   const [todos, setTodos] = useState([]);
   const [editId, setEditId] = useState(null);
   const [unique, setUnique] = useState(true);
-  const { isAuthenticated } = useSelector((state) => state.usermanage);
-  
+  const { isAuthenticated, dark_mode } = useSelector((state) => state.usermanage);
 
   const fetchTodos = async () => {
-    try {      
-      const response = await axios.get('http://127.0.0.1:8000/todos/', {
-            headers: {
-                Authorization: `Bearer ${isAuthenticated}`
-            }
-        });
+    try {
+      const response = await axios.get('todos/', {
+        headers: {
+          Authorization: `Bearer ${isAuthenticated}`
+        }
+      });
       setTodos(response.data);
     } catch (error) {
       console.error('Error fetching todos:', error);
@@ -28,10 +27,8 @@ function ToDo() {
   };
 
   useEffect(() => {
-    console.log(isAuthenticated);
-    
     fetchTodos();
-  },[todos]);
+  }, [isAuthenticated]);
 
   const handleInputChange = (e) => {
     const newValue = e.target.value;
@@ -54,11 +51,11 @@ function ToDo() {
     if (!foundDuplicate) {
       if (editId !== null) {
         try {
-          await axios.put(`http://127.0.0.1:8000/todos/${editId}/`, { text: todo }, {
+          await axios.put(`todos/${editId}/`, { text: todo }, {
             headers: {
-                Authorization: `Bearer ${isAuthenticated}`
+              Authorization: `Bearer ${isAuthenticated}`
             }
-        });
+          });
           setTodos(
             todos.map((obj) => {
               if (obj.id === editId) {
@@ -73,12 +70,11 @@ function ToDo() {
         }
       } else {
         try {
-          console.log(isAuthenticated); 
-          const response = await axios.post('http://127.0.0.1:8000/todos/', { text: todo }, {
+          const response = await axios.post('todos/', { text: todo }, {
             headers: {
-                Authorization: `Bearer ${isAuthenticated}`
+              Authorization: `Bearer ${isAuthenticated}`
             }
-        });
+          });
           setTodos([...todos, response.data]);
           setTodo("");
           setUnique(true);
@@ -98,11 +94,11 @@ function ToDo() {
 
   const onDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/todos/${id}/`, {
-            headers: {
-                Authorization: `Bearer ${isAuthenticated}`
-            }
-        });
+      await axios.delete(`todos/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${isAuthenticated}`
+        }
+      });
       setTodos(todos.filter((value) => id !== value.id));
     } catch (error) {
       console.error('Error deleting todo:', error);
@@ -118,17 +114,17 @@ function ToDo() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-gray-700 shadow-lg rounded-lg p-5 w-80 mx-auto">
+    <div className={`container mx-auto p-4 ${dark_mode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'}`}>
+      <div className={`shadow-lg rounded-lg p-5 w-80 mx-auto ${dark_mode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="text-center mb-5">
-          <h1 className="text-2xl text-gray-200">ToDo List</h1>
-          <h2 className="text-lg text-gray-400 mt-3">Whoop, I forgot that</h2>
+          <h1 className="text-2xl font-bold text-teal-800">ToDo List</h1>
+          <h2 className="text-lg text-teal-600 mt-3">Whoop, I forgot that</h2>
         </div>
 
         <div
           className={`input flex justify-between items-center mb-5 p-3 border ${
-            unique ? 'border-gray-500' : 'border-red-500'
-          } rounded-full bg-gray-600`}
+            unique ? (dark_mode ? 'border-teal-600' : 'border-teal-500') : (dark_mode ? 'border-red-500' : 'border-red-500')
+          } rounded-full ${dark_mode ? 'bg-gray-700' : 'bg-gray-50'}`}
         >
           <input
             value={todo}
@@ -136,18 +132,18 @@ function ToDo() {
             onChange={handleInputChange}
             type="text"
             placeholder="🖊️ Add item..."
-            className="flex-1 border-none outline-none pl-3 text-white bg-transparent"
+            className={`flex-1 border-none outline-none pl-3 ${dark_mode ? 'text-gray-100 bg-gray-800' : 'text-teal-800 bg-transparent'}`}
           />
           {editId == null ? (
             <FaPlus
               onClick={addTodo}
-              className="text-xl text-gray-400 ml-3 cursor-pointer"
+              className="text-xl text-teal-600 ml-3 cursor-pointer"
               title="Add"
             />
           ) : (
             <MdOutlineSaveAs
               onClick={addTodo}
-              className="text-xl text-gray-400 ml-3 cursor-pointer"
+              className="text-xl text-teal-600 ml-3 cursor-pointer"
               title="Save"
             />
           )}
@@ -159,21 +155,21 @@ function ToDo() {
           {todos.map((item) => (
             <div
               key={item.id}
-              className="todo flex justify-between items-center bg-gray-600 p-3 mb-2 rounded-full shadow-md"
+              className={`todo flex justify-between items-center p-3 mb-2 rounded-full shadow-md ${dark_mode ? 'bg-gray-700' : 'bg-gray-50'}`}
             >
               <div className="flex items-center">
                 <input
                   title="Complete"
                   onChange={async (e) => {
                     try {
-                      await axios.put(`http://127.0.0.1:8000/todos/${item.id}/`, {
+                      await axios.put(`todos/${item.id}/`, {
                         text: item.text,
                         status: e.target.checked,
                       }, {
-            headers: {
-                Authorization: `Bearer ${isAuthenticated}`
-            }
-        });
+                        headers: {
+                          Authorization: `Bearer ${isAuthenticated}`
+                        }
+                      });
                       setTodos(
                         todos.map((obj) => {
                           if (obj.id === item.id) {
@@ -189,10 +185,10 @@ function ToDo() {
                   }}
                   checked={item.status}
                   type="checkbox"
-                  className="w-5 h-5 cursor-pointer"
+                  className={`w-5 h-5 cursor-pointer ${dark_mode ? 'text-gray-100' : ''}`}
                 />
                 <p
-                  className={`ml-3 text-white ${
+                  className={`ml-3 ${dark_mode ? 'text-gray-100' : 'text-teal-800'} ${
                     item.status ? 'line-through' : ''
                   }`}
                 >
@@ -201,12 +197,12 @@ function ToDo() {
               </div>
               <div className="flex items-center">
                 <FiEdit3
-                  className="text-xl text-gray-400 ml-3 cursor-pointer"
+                  className={`text-xl ${dark_mode ? 'text-teal-300' : 'text-teal-600'} ml-3 cursor-pointer`}
                   onClick={() => onEdit(item.id)}
                   title="Edit"
                 />
                 <FaTimes
-                  className="text-xl text-gray-400 ml-3 cursor-pointer"
+                  className={`text-xl ${dark_mode ? 'text-teal-300' : 'text-teal-600'} ml-3 cursor-pointer`}
                   onClick={() => onDelete(item.id)}
                   title="Delete"
                 />
@@ -220,3 +216,6 @@ function ToDo() {
 }
 
 export default ToDo;
+
+
+

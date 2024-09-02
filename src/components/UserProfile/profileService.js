@@ -13,7 +13,8 @@ const profileService = {
     updateProfile: async (profileData, token) => {
         const response = await axios.put('profile/', profileData, {
             headers: {
-                Authorization: `Bearer ${token}`
+                'Content-Type'  : 'multipart/form-data',
+                'Authorization' : `Bearer ${token}`
             }
         });
         return response.data;

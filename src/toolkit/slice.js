@@ -5,7 +5,8 @@ import Cookies from 'js-cookie';
 const initialState = {
     isAuthenticated: Cookies.get('isAuthenticated') || '',
     is_admin: Cookies.get('is_admin') === 'true',
-    token: Cookies.get('token') || ''
+    token: Cookies.get('token') || '',
+    dark_mode : false
 };
 
 const usermanage = createSlice({
@@ -31,9 +32,11 @@ const usermanage = createSlice({
             Cookies.remove('isAuthenticated');
             Cookies.remove('is_admin');
             Cookies.remove('token');
+        },dark_mode_change :(state) => {
+            state.dark_mode = !state.dark_mode
         }
     }
 });
 
 export default usermanage.reducer;
-export const { login, logout } = usermanage.actions;
+export const { login, logout,dark_mode_change } = usermanage.actions;

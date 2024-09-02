@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import axios from "../../axios";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { dark_mode_change } from '../../toolkit/slice';
 
 const Register = () => {
     const navigate = useNavigate();
-    const [darkMode, setDarkMode] = useState(false);
+    const dispatch = useDispatch();
+    const { dark_mode } = useSelector(state => state.usermanage);
+
     const [formData, setFormData] = useState({
         username: '',
         first_name: '',
@@ -81,33 +85,41 @@ const Register = () => {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center w-full h-[100vh] bg-[#282D2D] px-5">
-            <div className="flex flex-col items-end justify-start overflow-hidden mb-2 xl:max-w-3xl w-full">
-                <div className="flex">
-                    <h3 className="text-white">Dark Mode: &nbsp;</h3>
-                    <label className="inline-flex relative items-center mr-5 cursor-pointer">
+        <div className={`flex flex-col justify-center items-center w-full h-screen px-5 ${dark_mode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+            <div className="flex flex-col items-end justify-start overflow-hidden mb-4 w-full">
+                <div className="flex items-center">
+                    <h3 className={`text-lg font-medium ${dark_mode ? 'text-teal-200' : 'text-teal-800'}`}>Dark Mode</h3>
+                    <label className="inline-flex items-center cursor-pointer ml-3">
                         <input
                             type="checkbox"
                             className="sr-only peer"
-                            checked={darkMode}
+                            checked={dark_mode}
                             readOnly
                         />
                         <div
-                            onClick={() => setDarkMode(!darkMode)}
-                            className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-green-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
-                        ></div>
+                            onClick={() => dispatch(dark_mode_change())}
+                            className={`w-12 h-6 rounded-full ${dark_mode ? 'bg-teal-600' : 'bg-gray-300'} relative cursor-pointer transition-colors duration-300`}
+                        >
+                            <div
+                                className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${dark_mode ? 'translate-x-6' : ''}`}
+                            ></div>
+                        </div>
                     </label>
                 </div>
             </div>
-            <div className={`xl:max-w-3xl ${darkMode ? "bg-black" : "bg-white"} w-full p-5 sm:p-10 rounded-md`}>
-                <h1 className={`text-center text-xl sm:text-3xl font-semibold ${darkMode ? "text-white" : "text-black"}`}>
+            <div
+                className={`xl:max-w-3xl ${dark_mode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} w-full p-6 sm:p-8 rounded-lg shadow-lg relative`}
+            >
+                <h1
+                    className={`text-center text-2xl sm:text-3xl font-semibold ${dark_mode ? 'text-white' : 'text-gray-800'}`}
+                >
                     Register for a free account
                 </h1>
                 <form className="w-full mt-8" onSubmit={handleSubmit}>
-                    <div className="mx-auto max-w-xs sm:max-w-md md:max-w-lg flex flex-col gap-4">
+                    <div className="mx-auto max-w-xs sm:max-w-md md:max-w-lg flex flex-col gap-5">
                         <div className="flex flex-col sm:flex-row gap-3">
                             <input
-                                className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                                className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                                 type="text"
                                 name="username"
                                 placeholder="Username"
@@ -116,39 +128,39 @@ const Register = () => {
                             />
                         </div>
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="text"
                             name="first_name"
-                            placeholder="Enter your First Name"
+                            placeholder="First Name"
                             value={formData.first_name}
                             onChange={handleChange}
                         />
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="text"
                             name="last_name"
-                            placeholder="Enter your Last Name"
+                            placeholder="Last Name"
                             value={formData.last_name}
                             onChange={handleChange}
                         />
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="email"
                             name="email"
-                            placeholder="Enter your email"
+                            placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
                         />
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="tel"
                             name="phone"
-                            placeholder="Enter your phone"
+                            placeholder="Phone"
                             value={formData.phone}
                             onChange={handleChange}
                         />
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="password"
                             name="password"
                             placeholder="Password"
@@ -156,25 +168,22 @@ const Register = () => {
                             onChange={handleChange}
                         />
                         <input
-                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 focus:outline ${darkMode ? "bg-[#302E30] text-white focus:border-white" : "bg-gray-100 text-black focus:border-black"}`}
+                            className={`w-full px-5 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none ${dark_mode ? 'bg-gray-700 text-white placeholder-gray-400 focus:border-teal-500' : 'bg-gray-100 text-gray-800 focus:border-teal-500'}`}
                             type="password"
                             name="password2"
                             placeholder="Confirm Password"
                             value={formData.password2}
                             onChange={handleChange}
                         />
-                        <button className="mt-5 tracking-wide font-semibold bg-gray-600 text-gray-100 w-full py-4 rounded-lg hover:bg-[#28acffd1]/90 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                            <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                                <circle cx="8.5" cy="7" r="4" />
-                                <path d="M20 8v6M23 11h-6" />
-                            </svg>
-                            <span className="ml-3">Register</span>
+                        <button
+                            className={`mt-6 tracking-wide font-semibold py-4 rounded-lg ${dark_mode ? 'bg-teal-600 text-white hover:bg-teal-700' : 'bg-teal-500 text-white hover:bg-teal-600'} transition-colors duration-300`}
+                        >
+                            Register
                         </button>
-                        {error && <p className="mt-2 text-red-500 text-center">{error}</p>}
-                        <p className="mt-6 text-xs text-gray-600 text-center">
+                        {error && <p className="mt-3 text-red-500 text-center">{error}</p>}
+                        <p className="mt-6 text-sm text-gray-600 text-center">
                             Already have an account?{" "}
-                            <span className="text-[#1997e6] font-semibold cursor-pointer" onClick={() => navigate('/login')}>Login</span>
+                            <span className="text-teal-500 font-semibold cursor-pointer" onClick={() => navigate('/login')}>Login</span>
                         </p>
                     </div>
                 </form>
@@ -184,3 +193,4 @@ const Register = () => {
 };
 
 export default Register;
+

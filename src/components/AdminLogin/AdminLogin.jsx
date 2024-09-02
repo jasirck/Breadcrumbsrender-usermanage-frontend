@@ -13,13 +13,14 @@ function AdminLogin() {
   const dispatch = useDispatch();
   const { is_admin } = useSelector(state => state.usermanage);
 
-useEffect(()=>{
-  if (is_admin){
-    navigate('/admin')
-  }else{
-    dispatch(logout());
-  }
-},[dispatch, is_admin, navigate])
+  useEffect(() => {
+    if (is_admin) {
+      navigate('/admin')
+    } else {
+      dispatch(logout());
+      navigate('/adminlogin')
+    }
+  }, [dispatch, is_admin, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -38,12 +39,13 @@ useEffect(()=>{
         navigate('/admin');
       }
     } catch (error) {
-      alert('Invalid email or password. Please try again.')
+      alert('Invalid email or password. Please try again.');
       console.error('Admin login error:', error);
-      if (error.response && error.response.status === 401) {
-      }
-      ;
     }
+  };
+
+  const handleBack = () => {
+    navigate('/'); 
   };
 
   return (
@@ -85,6 +87,13 @@ useEffect(()=>{
               className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Login
+            </button>
+            <button
+              type="button"
+              onClick={handleBack}
+              className="ml-4 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Back
             </button>
           </div>
         </form>
